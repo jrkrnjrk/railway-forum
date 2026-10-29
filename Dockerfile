@@ -1,13 +1,13 @@
 FROM discourse/discourse:latest
 
-# Railway expects the app to listen on $PORT
 ENV RAILS_ENV=production
 ENV UNICORN_PORT=3000
 
-# Ensure volume mount point exists
 RUN mkdir -p /shared
 
-# Expose port
-EXPOSE 3000
+# Copy Discourse nginx config and remove the default site
+RUN cp /var/www/discourse/config/nginx.sample.conf /etc/nginx/conf.d/discourse.conf \
+ && rm -f /etc/nginx/sites-enabled/default \
+ && mkdir -p /var/nginx/cache
 
-# The official image already has the entrypoint
+EXPOSE 80
